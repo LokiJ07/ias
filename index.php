@@ -6,11 +6,15 @@ $message = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST["username"];
     $password = $_POST["password"];
+    $loggedInUser = "";
 
     // 🚨 **Vulnerable Simulation - SQL Injection Always Works**
     if (str_contains($username, "'") || str_contains($username, "OR")) {
         $_SESSION["username"] = "Hacked Admin";
-        header("Location: dashboard.php");
+        echo "<script>
+            alert('⚠ WARNING: You have logged in as Hacked Admin!');
+            window.location.href = 'dashboard.php';
+        </script>";
         exit();
     }
 
@@ -23,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     foreach ($users as $user) {
         if ($user["username"] === $username && $user["password"] === $password) {
             $_SESSION["username"] = $username;
-            header("Location: dashboard.php");
+            echo "<script>window.location.href = 'dashboard.php';</script>";
             exit();
         }
     }
